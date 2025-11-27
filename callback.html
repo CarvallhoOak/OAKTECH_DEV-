@@ -2,56 +2,40 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Google OAuth Callback</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            text-align: center;
-            padding-top: 70px;
-        }
-        .box {
-            background: white;
-            padding: 25px;
-            margin: auto;
-            width: 85%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        h2 {
-            color: #4CAF50;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="box">
-        <h2>Autorização Concluída</h2>
-        <p>Agora você já pode voltar ao aplicativo.</p>
-    </div>
-
+    <title>Callback - Google Drive OAuth</title>
     <script>
-        // Função para pegar parâmetros da URL
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        // Função para extrair parâmetros da URL
+        function getQueryParameter(name) {
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 
-        // Extrai o AUTH CODE retornado pelo Google
-        const authCode = getQueryParam("code");
+        window.onload = function() {
+            // Pega o code retornado pelo Google
+            var code = getQueryParameter('code');
 
-        if (authCode) {
-            console.log("Auth Code:", authCode);
-
-            // Envia o code para o Sketchware Pro via JavaScriptInterface
-            if (window.Android && window.Android.getAuthCode) {
-                window.Android.getAuthCode(authCode);
+            if(code) {
+                // Envia para o Sketchware via JavascriptInterface
+                if (typeof Android !== 'undefined' && Android.receiveCode) {
+                    Android.receiveCode(code);
+                } else {
+                    // Caso teste no navegador
+                    document.body.innerHTML = "<h2>Auth code:</h2><p>" + code + "</p>";
+                }
+            } else {
+                // Se houver erro ou acesso negado
+                var error = getQueryParameter('error');
+                document.body.innerHTML = "<h2>Erro no OAuth:</h2><p>" + (error ? error : "Sem code na URL") + "</p>";
             }
-        } else {
-            console.log("Nenhum auth code encontrado.");
         }
     </script>
-
+</head>
+<body>
+    <h2>Aguarde...</h2>
+    <p>Autorizando aplicativo do Google Drive.</p>
 </body>
 </html>
