@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Google Drive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            text-align: center;
+            padding-top: 70px;
+        }
+        .btn {
+            background-color: #4285F4;
+            color: white;
+            padding: 14px 22px;
+            font-size: 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Google Drive - Login</h2>
+    <p>Clique para autorizar o aplicativo.</p>
+
+    <a id="loginBtn" class="btn" href="#">Entrar com Google</a>
+
+    <script>
+        const client_id = "146865283755-2c8558nq69eu1b3eb4i5soojr7cpd01r.apps.googleusercontent.com";
+
+        const redirect_uri = "https://carvallhooak.github.io/OAKTECH_DEV-/callback.html";
+
+        const scope = "https://www.googleapis.com/auth/drive.file";
+
+        const authUrl =
+            "https://accounts.google.com/o/oauth2/v2/auth"
+            + "?client_id=" + client_id
+            + "&redirect_uri=" + encodeURIComponent(redirect_uri)
+            + "&response_type=code"
+            + "&access_type=offline"
+            + "&prompt=consent"
+            + "&scope=" + encodeURIComponent(scope);
+
+        document.getElementById("loginBtn").href = authUrl;
+    </script>
+
+</body>
+</html>
